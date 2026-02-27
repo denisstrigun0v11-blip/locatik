@@ -885,7 +885,9 @@ if __name__ == "__main__":
     bot_thread.start()
     
     # Запускаем Flask сервер
-    port = int(os.environ.get('PORT', 8080))
-    print(f"🌐 Flask server running on port {port}")
-    app.run(host='0.0.0.0', port=port, debug=False)
+   # Render задаёт PORT через переменную окружения
+port = int(os.environ.get('PORT', 5000))
+print(f"🌐 Flask server running on port {port}")
+app.run(host='0.0.0.0', port=port, debug=False)
+
 
