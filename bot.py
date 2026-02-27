@@ -125,7 +125,6 @@ def send_welcome(message):
         message.chat.id, 
         welcome_text, 
         reply_markup=get_main_keyboard(),
-        parse_mode='Markdown'
     )
 
 @bot.message_handler(commands=['help'])
@@ -167,7 +166,7 @@ def send_help(message):
 📝 Редактировать понятие
 🗑️ Удалить понятие
     """
-    bot.send_message(message.chat.id, help_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, text, parse_mode='HTML')
 
 @bot.message_handler(commands=['stats'])
 def send_stats(message):
@@ -190,7 +189,7 @@ def send_stats(message):
 📈 Прогресс обучения: {progress}%
 🎯 Успешность: {success_rate}%
     """
-    bot.send_message(message.chat.id, stats_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, text, parse_mode='HTML')
 
 @bot.message_handler(commands=['quiz'])
 def start_quiz_command(message):
@@ -267,7 +266,7 @@ def show_concept_message(chat_id, concept):
         chat_id,
         concept_text,
         reply_markup=get_continue_keyboard(),
-        parse_mode='Markdown'
+        parse_mode='HTML'
     )
 
 @bot.message_handler(func=lambda message: message.text == "🎯 Викторина")
@@ -282,7 +281,7 @@ def quiz_category_choice(message):
         "🐍 Python — основы и библиотеки\n"
         "🎲 Все категории — случайные вопросы",
         reply_markup=keyboard,
-        parse_mode='Markdown'
+        parse_mode='HTML'
     )
 
 def start_quiz(message, category_type):
@@ -365,7 +364,7 @@ def send_quiz_question(message, user_id):
         message.chat.id,
         quiz_text,
         reply_markup=keyboard,
-        parse_mode='Markdown'
+        parse_mode='HTML'
     )
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith('quiz_'))
@@ -444,7 +443,7 @@ def finish_quiz(message, user_id):
 {text}
     """
     
-    bot.send_message(message.chat.id, result_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, result_text,parse_mode='HTML')
     
     # Показываем кнопку возврата в меню
     keyboard = types.InlineKeyboardMarkup()
@@ -482,7 +481,7 @@ def show_user_stats(message):
             percentage = quiz['score'] * 100 // quiz['total_questions']
             stats_text += f"{i}. {quiz['score']}/{quiz['total_questions']} ({percentage}%)\n"
     
-    bot.send_message(message.chat.id, stats_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, stats_text, parse_mode='HTML')
 
 @bot.message_handler(func=lambda message: message.text == "🔍 Поиск")
 def search_prompt(message):
@@ -517,7 +516,7 @@ def process_search(message):
 
 🏷️ Категория: {concept['category']}
         """
-        bot.send_message(message.chat.id, concept_text, parse_mode='Markdown')
+        bot.send_message(message.chat.id, concept_text, parse_mode='HTML')
     
     if len(results) > 5:
         bot.send_message(message.chat.id, f"... и ещё {len(results) - 5} результатов")
@@ -541,7 +540,7 @@ def show_categories(message):
         count = get_concept_count(cat)
         categories_text += f"• {cat} ({count} понятий)\n"
     
-    bot.send_message(message.chat.id, categories_text, reply_markup=keyboard, parse_mode='Markdown')
+    bot.send_message(message.chat.id, categories_text, reply_markup=keyboard, parse_mode='HTML')
 
 @bot.message_handler(func=lambda message: message.text == "ℹ️ О боте")
 def about_bot(message):
@@ -589,7 +588,7 @@ def about_bot(message):
 
 🎯 Удачи в обучении!
     """
-    bot.send_message(message.chat.id, about_text, parse_mode='Markdown')
+    bot.send_message(message.chat.id, about_text, parse_mode='HTML')
 
 # =============================================================================
 # АДМИН-ФУНКЦИИ
@@ -605,7 +604,7 @@ def add_concept_prompt(message):
     msg = bot.send_message(
         message.chat.id,
         "➕ **Добавление нового понятия**\n\nВведите термин:",
-        parse_mode='Markdown',
+        parse_mode='HTML',
         reply_markup=types.ReplyKeyboardRemove()
     )
     bot.register_next_step_handler(msg, process_add_term)
@@ -696,7 +695,7 @@ def show_all_concepts(message):
     if len(concepts) > 20:
         text += f"\n... и ещё {len(concepts) - 20} понятий"
     
-    bot.send_message(message.chat.id, text, parse_mode='Markdown', reply_markup=get_admin_keyboard())
+    bot.send_message(message.chat.id, text, parse_mode='HTML'), reply_markup=get_admin_keyboard())
 
 @bot.message_handler(func=lambda message: message.text == "🔙 Главное меню" or message.text == "🔙 В меню")
 def show_main_menu(message):
@@ -889,3 +888,4 @@ if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8080))
     print(f"🌐 Flask server running on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
+
