@@ -862,4 +862,30 @@ if __name__ == "__main__":
     
     print("🤖 WebTechHelperBot 2.0 запущен...")
     print(f"📚 Всего понятий в базе: {get_concept_count()}")
-    bot.infinity_polling()
+  # Добавляем Flask для Render
+    from flask import Flask
+    import os
+    
+    app = Flask(__name__)
+    
+    @app.route('/')
+    def home():
+        return "WebTechHelperBot is running! 🤖"
+    
+    @app.route('/health')
+    def health():
+        return "OK", 200
+    
+    # Запускаем бота в отдельном потоке
+    import threading
+    
+    def run_bot():
+        bot.infinity_polling()
+    
+    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread.start()
+    
+    # Запускаем Flask сервер
+    port = int(os.environ.get('PORT', 8080))
+    print(f"🌐 Flask server running on port {port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
